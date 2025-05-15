@@ -2,7 +2,6 @@
 
 import json
 import socket
-from time import sleep
 
 # Takes a list of dictionaries and sorts by date in ascending order
 # Returns a sorted list without modifying the existing list
@@ -57,23 +56,20 @@ while True:
     server_socket.listen(1)
 
     # Accept a new connection
-    conn, address = server_socket.accept()
+    connection, address = server_socket.accept()
 
 
     while True:
         # Receive data stream and set max number of bytes to receive
-        data = conn.recv(8192)
+        data = connection.recv(8192)
 
         # If no data is received, break
         if not data:
             break
 
         # Receive data and convert it from JSON 
-        print("Received from connected user")
         data_recv = json.loads(data.decode('utf-8'))
-        sleep(2)
-        print("Processing data")
-
+        
         # Check for the requested process
         if data_recv[0]['method'] == 'asc':
             new_data = sort_ascending(data_recv)
@@ -81,12 +77,10 @@ while True:
             new_data = sort_descending(data_recv)
         else:
             new_data = date_filter(data_recv)
-        sleep(2)
-
+        
         # Convert to JSON and send the data back
-        print("Sending data back to client")
         data_send = json.dumps(new_data).encode('utf-8')
-        conn.sendall(data_send)
+        connection.sendall(data_send)
 
     # Close the connection
-    conn.close()
+    connection.close()

@@ -17,6 +17,7 @@ data = [
     ]
 
 
+
 def send_request(data):
     # Get the hostname and initiate the port
     host = socket.gethostname()
@@ -33,13 +34,11 @@ def send_request(data):
     print("Sending data to server")
     data_send = json.dumps(data).encode('utf-8')
     client_socket.sendall(data_send)
-    sleep(2)
-
+    
     # Receive the data back
     data_recv = client_socket.recv(8192)
     print("Receiving data from server")
     new_data = json.loads(data_recv.decode('utf-8'))
-    sleep(2)
     print("Data Received")
     for item in new_data:
         print(item)
